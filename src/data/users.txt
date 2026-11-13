@@ -1,0 +1,12 @@
+1;Ion;Popescu
+2;Maria;Ionescu
+3;Andrei;Georgescu
+4;Elena;Dumitru
+5;Vlad;Stan
+6;Ana;Munteanu
+7;Mihai;Constantin
+8;Ioana;Radu
+9;Cristian;Matei
+10;Diana;Pop
+11;Bogdan;Toma
+12;Sofia;Lazar

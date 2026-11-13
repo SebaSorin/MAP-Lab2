@@ -15,7 +15,7 @@ public class UserValidator implements Validator<User> {
      */
     @Override
     public void validate(User entity) {
-        if (entity.getName().isEmpty() || entity.getName() == null || entity.getName().trim().isEmpty())
+        if (entity.getFirstName().isEmpty() || entity.getFirstName() == null || entity.getFirstName().trim().isEmpty())
             throw new UserValidationException("Numele nu poate fi gol");
         if (entity.getId() <= 0)
             throw new UserValidationException("Id-ul poate fi doar un numar natural nenul");

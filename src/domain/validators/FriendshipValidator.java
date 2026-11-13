@@ -19,5 +19,7 @@ public class FriendshipValidator implements Validator<Friendship> {
             throw new FriendshipValidationException("Id-urile pot fi doar numare naturale nenule");
         if (entity.getLeftUser() == entity.getRightUser())
             throw new FriendshipValidationException("Un utilizator nu poate fi prieten cu el insusi!");
+        if (entity.getDate() == null)
+            throw new FriendshipValidationException("Data nu poate fi nula!");
     }
 }

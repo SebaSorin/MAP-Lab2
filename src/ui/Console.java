@@ -3,6 +3,7 @@ package ui;
 import domain.Friendship;
 import domain.User;
 import domain.validators.ValidationException;
+import repository.RepositoryException;
 import service.NetworkService;
 import service.ServiceException;
 
@@ -32,6 +33,7 @@ public class Console {
 
 
     public void run(){
+        printStartupWarnings();
         while (true){
             System.out.println('\n');
             printMenu();
@@ -66,10 +68,12 @@ public class Console {
                         printMostSociableCommunity();
                         break;
                 }
-            } catch(ServiceException | ValidationException e){
-                System.err.println(e.getMessage());
-            } catch(NumberFormatException e){
-                System.err.println("Trebuie introdus un numar natural!");
+            } catch (ServiceException | ValidationException | RepositoryException e){
+                System.out.println(e.getMessage());
+            } catch (NumberFormatException e){
+                System.out.println("Trebuie introdus un numar natural!");
+            } catch (UnsupportedOperationException e){
+                System.out.println("Operatie nesuportata: " + e.getMessage());
             }
         }
     }
@@ -88,9 +92,11 @@ public class Console {
     private void addUserUI(){
         System.out.print("id: ");
         int id = Integer.parseInt(scanner.nextLine().trim());
+        System.out.print("prenume: ");
+        String firstName = scanner.nextLine().trim();
         System.out.print("nume: ");
-        String name = scanner.nextLine().trim();
-        service.addUser(id, name);
+        String lastName = scanner.nextLine().trim();
+        service.addUser(id, firstName, lastName);
     }
 
     private void removeUserUI(){
@@ -124,4 +130,15 @@ public class Console {
         for (User u : service.getMostSociableCommunity())
             System.out.println(u);
     }
+
+    private void printStartupWarnings(){
+        for (String w : service.getUserRepo().getLoadWarnings())
+            System.out.println("Avertisment (utilizatori): " + w);
+        for (String w : service.getFriendshipRepo().getLoadWarnings())
+            System.out.println("Avertisment (prietenii): " + w);
+        for (String w : service.getConsistencyWarnings())
+            System.out.println("Avertisment (service): " + w);
+    }
+
+
 }

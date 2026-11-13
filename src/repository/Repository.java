@@ -2,6 +2,9 @@ package repository;
 
 import domain.Entity;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * CRUD operations
  *
@@ -50,4 +53,9 @@ public interface Repository<ID, E extends Entity<ID>> {
      * @throws IllegalArgumentException if the entity is null
      */
     E update(E entity);
+
+    default List<String> getLoadWarnings(){
+        return Collections.emptyList();
+    }
+
 }

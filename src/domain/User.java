@@ -8,27 +8,31 @@ import java.util.List;
  * Contains a name for the user and the user's friend list
  */
 public class User extends Entity<Integer> {
-    private String name;
+    private String firstName;
+    private String lastName;
     private final List<Integer> friendList;
 
-    public User(int id, String name) {
+    public User(int id, String name, String lastName) {
         super(id);
-        this.name = name;
+        this.firstName = name;
+        this.lastName = lastName;
         this.friendList = new ArrayList<>();
     }
 
-    public String getName() {
-        return name;
+
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     @Override
     public String toString(){
         return "id: " + getId().toString() +
-                " name: " + name +
+                " first name: " + firstName +
+                " last name: " + lastName +
                 " friend ids: " + friendList;
     }
 
@@ -54,4 +58,11 @@ public class User extends Entity<Integer> {
         friendList.remove(friendId);
     }
 
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 }

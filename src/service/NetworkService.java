@@ -10,11 +10,13 @@ import java.util.*;
 public class NetworkService {
     private final Repository<Integer, User> userRepo;
     private final Repository<Tuple<Integer, Integer>, Friendship> friendshipRepo;
+    private final List<String> consistencyWarnings = new ArrayList<>();
 
     public NetworkService(Repository<Integer, User> userRepo,
                           Repository<Tuple<Integer, Integer>, Friendship> friendshipRepo) {
         this.userRepo = userRepo;
         this.friendshipRepo = friendshipRepo;
+        syncFriendshipLists();
     }
 
     public Repository<Integer, User> getUserRepo(){
@@ -25,14 +27,36 @@ public class NetworkService {
         return friendshipRepo;
     }
 
+    private void syncFriendshipLists() {
+        List<Friendship> orphans = new ArrayList<>();
+        for (Friendship fs : friendshipRepo.findAll()){
+            User u1 = userRepo.findOne(fs.getLeftUser());
+            User u2 = userRepo.findOne(fs.getRightUser());
+
+            if (u1 == null || u2 == null)
+                orphans.add(fs);
+            else{
+                u1.addFriend(fs.getRightUser());
+                u2.addFriend(fs.getLeftUser());
+            }
+        }
+
+        for (Friendship fs : orphans){
+            friendshipRepo.delete(fs.getId());
+            consistencyWarnings.add("Prietenia " + fs.getId() + " a fost stearsa(unul dintre useri nu exista)");
+        }
+    }
+
+
     /**
      * Adds a user
      * @param id must be > 0 and not null
-     * @param name must not be null
+     * @param firstName must not be null
+     * @param lastName must not be null
      * @throws ServiceException if id is already in use
      */
-    public void addUser(int id, String name){
-        User newUser = new User(id, name);
+    public void addUser(int id, String firstName, String lastName){
+        User newUser = new User(id, firstName, lastName);
         if (userRepo.save(newUser) != null)
             throw new ServiceException("Acest id este folosit deja!");
     }
@@ -212,4 +236,7 @@ public class NetworkService {
         return mostSociable;
     }
 
+    public List<String> getConsistencyWarnings() {
+        return consistencyWarnings;
+    }
 }

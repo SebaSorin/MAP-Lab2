@@ -7,15 +7,27 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Repository that keeps the entities in a map, in memory. Every entity is
+ * validated before it is saved or updated.
+ *
+ * @param <ID> type of the identifier of the entities
+ * @param <E>  type of the stored entities
+ */
 public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<ID, E> {
     private final Map<ID, E> entities = new HashMap<>();
-    private final Validator<E> validator;
+    protected final Validator<E> validator;
 
+    /**
+     * {@inheritDoc}
+     */
     public InMemoryRepository(Validator<E> validator) {
         this.validator = validator;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public E findOne(ID id) {
         if (id == null)
@@ -23,11 +35,17 @@ public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<
         return entities.get(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Iterable<E> findAll() {
         return Collections.unmodifiableCollection(entities.values());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public E save(E entity) {
         if (entity == null)
@@ -39,6 +57,9 @@ public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<
         return entity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public E delete(ID id) {
         if (id == null)
@@ -47,6 +68,9 @@ public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<
         return entities.remove(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public E update(E entity) {
         if (entity == null)
